@@ -5,7 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ra.code.restfulapi5.controller.productsize.ProductSizeConversion;
+import ra.code.restfulapi5.controller.productsize.ProductSizeResponseDto;
+import ra.code.restfulapi5.model.ProductSize;
 import ra.code.restfulapi5.model.ProductType;
+import ra.code.restfulapi5.repository.IProductSizeRepository;
 import ra.code.restfulapi5.service.producttype.IProductTypeService;
 
 import java.util.ArrayList;
@@ -22,6 +26,9 @@ public class ProductTypeController {
 
     @Autowired
     private IProductTypeService productTypeService;
+
+    @Autowired
+    private IProductSizeRepository productSizeRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -57,6 +64,24 @@ public class ProductTypeController {
         return productTypeOptional
                 .map(productType -> new ResponseEntity<>(convertProductTypeToProductTypeResponseDto(productType), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
+     * Get all product size in product type
+     * @param id
+     * @return List ProductSizeResponseDto
+     */
+    @GetMapping("/{id}/productsizes")
+    public ResponseEntity<List<ProductSizeResponseDto>> getAllProductSizeInProductType(@PathVariable Long id) {
+        // Find all product size by product type id
+        List<ProductSize> productSizeList = productSizeRepository.getProductSizeInProductType(id);
+
+        // Map entity to response dto
+        List<ProductSizeResponseDto> result = new ArrayList<>();
+        productSizeList.forEach(productSize -> {
+            result.add(ProductSizeConversion.convertProductSizeToProductSizeResponseDto(productSize));
+        });
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
