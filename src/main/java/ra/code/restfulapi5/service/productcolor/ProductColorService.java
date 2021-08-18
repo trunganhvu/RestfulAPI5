@@ -50,7 +50,7 @@ public class ProductColorService implements IProductColorService{
      */
     @Caching(
         evict = {
-            @CacheEvict(value = "productcolors", key = "'CACHE_KEY_PRODUCT_COLORS'",  beforeInvocation = true)
+            @CacheEvict(value = "productcolors", key = "'CACHE_KEY_PRODUCT_COLORS'", beforeInvocation = true)
         },
         put = {
             @CachePut(value = "productcolor", key = "#productColor.productColorId")

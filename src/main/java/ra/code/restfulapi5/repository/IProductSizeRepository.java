@@ -15,6 +15,11 @@ import java.util.List;
 @Repository
 public interface IProductSizeRepository extends JpaRepository<ProductSize, Long> {
 
+    /**
+     * Get all size in product type
+     * @param productTypeId
+     * @return List ProductSize
+     */
     @Query(value = "select * from product_size " +
             "where product_type_id=?1", nativeQuery = true)
     public List<ProductSize> getProductSizeInProductType(@Param("productTypeId") Long productTypeId);

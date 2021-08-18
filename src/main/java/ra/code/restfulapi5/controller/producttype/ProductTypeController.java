@@ -5,11 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ra.code.restfulapi5.controller.product.ProductConversion;
+import ra.code.restfulapi5.controller.product.ProductResponseDto;
 import ra.code.restfulapi5.controller.productsize.ProductSizeConversion;
 import ra.code.restfulapi5.controller.productsize.ProductSizeResponseDto;
+import ra.code.restfulapi5.model.Product;
 import ra.code.restfulapi5.model.ProductSize;
 import ra.code.restfulapi5.model.ProductType;
 import ra.code.restfulapi5.repository.IProductSizeRepository;
+import ra.code.restfulapi5.service.product.IProductService;
 import ra.code.restfulapi5.service.producttype.IProductTypeService;
 
 import java.util.ArrayList;
@@ -29,6 +33,9 @@ public class ProductTypeController {
 
     @Autowired
     private IProductSizeRepository productSizeRepository;
+
+    @Autowired
+    private IProductService productService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -80,6 +87,24 @@ public class ProductTypeController {
         List<ProductSizeResponseDto> result = new ArrayList<>();
         productSizeList.forEach(productSize -> {
             result.add(ProductSizeConversion.convertProductSizeToProductSizeResponseDto(productSize));
+        });
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Get all product in product type
+     * @param id
+     * @return List ProductResponseDto
+     */
+    @GetMapping("/{id}/products")
+    public ResponseEntity<List<ProductResponseDto>> getAllProductInProductType(@PathVariable Long id) {
+        // Find all product in type by type id
+        List<Product> productList = productService.getAllProductInProductType(id);
+
+        // Map entity to response dto
+        List<ProductResponseDto> result = new ArrayList<>();
+        productList.forEach(product -> {
+            result.add(ProductConversion.convertProductToProductResponseDto(product));
         });
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
