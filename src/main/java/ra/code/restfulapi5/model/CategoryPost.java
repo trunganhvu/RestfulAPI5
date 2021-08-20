@@ -19,7 +19,7 @@ public class CategoryPost {
 
 //    @Column(name = "category_id", nullable = false)
     @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "categoryId", referencedColumnName = "category_id")
+    @JoinColumn(name = "categoryId", referencedColumnName = "category_id", nullable = false)
     private Category categoryId;
 
     @Column(name = "category_post_title", length = 255, nullable = false)
